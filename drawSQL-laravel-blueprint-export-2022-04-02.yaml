@@ -1,0 +1,115 @@
+models:
+    Ad:
+#        id: increments
+#        sku: integer unique
+#        title: string nullable
+#        description: longText nullable
+#        price: float
+#        location: text
+#        published_at: dateTime nullable
+#        indexes:
+#            - index: user_id, sku
+        relationships:
+#            hasMany: Feature
+#            hasOne: Attribute
+#            belongsToMany: TaxonomyContent
+#            belongsTo: User
+            morphMany: Attachment
+# todo: add morph relation, and default value
+    Feature:
+#        id: increments
+#        sort: integer unique
+#        type: enum:homepage,top,highlight,campaign
+#        featureable_id: integer
+#        featureable_type: string commnet:"Ad,Store"
+#        feature_from: dateTime
+#        feature_to: dateTime
+# todo: add morph relation, and default value
+    Attribute:
+        id: increments
+#        color: string
+#        negotiable: boolean default:false
+        warranty: boolean default:false
+#        condition: enum:new,used
+        status: enum:draft,pending,unpublished,published,sold
+#        boost: enum:four-wheel,front-wheel,rear-wheel
+#        gear: enum:auto,manual,
+#        country_import: enum:gulf,usa,others
+#        fuel_type: enum:petrol,diesel
+#        kilometer: double
+#        engine_power: float
+#        verified_at: dateTime nullable
+        belongsTo: Ad
+    Taxonomy:
+        id: increments
+        type: string unique comment:"tag, brand, type ..."
+        parent: integer nullable
+        sort: integer comment:"to help get the children and parents of a taxonomy"
+        published_at: dateTime
+        indexes:
+            - index: type
+        hasMany: TaxonomyContent
+    AdTaxonomy:
+        id: increments
+        ad_id: integer
+        taxonomy_id: integer
+        indexes:
+            - index: ad_id, taxonomy_id
+    User:
+        id: increments
+#        name: string
+#        email: string unique
+#        phone_no: string unique
+#        gender: char
+#        password: string
+#        confirmed_at: dateTime
+#        indexes:
+#            - index: email, phone_no
+#        belongsTo: City
+#        hasMany: Ad
+        morphMany: Attachment
+#    Attachment:
+#        id: increments
+#        attachable_id: integer
+#        attachable_type: string
+#        type: enum comment:"photo, document, audio, video, others"
+#        path: string
+#        disk_name: string nullable
+#        file_name: string
+#        thumbnail: boolean nullable
+#        indexes:
+#            - index: attachable_id, attachable_type
+#        morphTo: User, Ad
+    TaxonomyContent:
+        id: increments
+        title: string
+        description: string
+        published_at: dateTime
+        lang: string nullable
+        indexes:
+            - index: taxonomy_id
+        belongsTo: Taxonomy
+        belongsToMany: Ad
+    AdTaxonomyContent:
+        id: increments
+        ad_ad: integer
+        taxonomy_content_id: integer
+    Country:
+        id: increments
+        code: string
+        name: string
+        phone_code: integer
+        hasMany: City
+    City:
+        id: increments
+        name: string
+        belongsTo: Country
+    Role:
+        id: increments
+        name: string
+        hasMany: Permission
+    Permission:
+        id: increments
+        name: string
+        belongsTo: Role
+seeders: Post, Comment, Role, Permission

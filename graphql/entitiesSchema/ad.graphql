@@ -1,0 +1,42 @@
+extend type Query {
+    ads(
+        orderBy: _ @orderBy(columnsEnum: "AdColumnsEnum")
+        where: _ @whereConditions(columnsEnum: "AdColumnsEnum")
+        taxonomyContents: _ @whereHasConditions(columnsEnum: "TaxonomyContentColumnsEnum")
+    ): [Ad!]! @softDeletes @paginate(type: PAGINATOR, defaultCount: 10)
+
+    ad(
+        where: _ @whereConditions(columnsEnum: "AdColumnsEnum")
+        taxonomyContents: _ @whereHasConditions(columnsEnum: "TaxonomyContentColumnsEnum")
+    ): Ad @first
+}
+
+type Ad {
+    id: ID!
+    sku: String!
+    title: String!
+    description: String
+    location: String
+    price: Float!
+    published_at: DateTime
+    deleted_at: DateTime
+    created_at: DateTime
+    updated_at: DateTime
+    user: User @belongsTo
+    attributes: Attribute @hasOne
+    features: [Feature!]! @morphMany(type: PAGINATOR, defaultCount: 10)
+    taxonomyContents: [TaxonomyContent!]! @belongsToMany(type: PAGINATOR, defaultCount: 10)
+}
+
+enum AdColumnsEnum {
+    ID
+    SKU
+    TITLE
+    DESCRIPTION
+    LOCATION
+    PRICE
+    PUBLISHED_AT
+    DELETED_AT
+    CREATED_AT
+    UPDATED_AT
+}

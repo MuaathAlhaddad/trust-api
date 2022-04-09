@@ -1,0 +1,77 @@
+extend type Mutation {
+    createTaxonomyContent(input: createTaxonomyContentInput! @spread): TaxonomyContent @create
+
+    updateTaxonomyContent(id: ID!, input: updateTaxonomyContentInput! @spread): TaxonomyContent @update
+
+    deleteTaxonomyContent(id: ID!): TaxonomyContent @delete
+
+    restoreTaxonomyContent(id: ID!): TaxonomyContent @restore
+}
+extend type Query {
+    taxonomyContents(
+        orderBy: _ @orderBy(columnsEnum: "TaxonomyContentColumnsEnum")
+        parent: _ @whereHasConditions(columnsEnum: "TaxonomyContentColumnsEnum")
+        children: _ @whereHasConditions(columnsEnum: "TaxonomyContentColumnsEnum")
+        taxonomy: _ @whereHasConditions(columnsEnum: "TaxonomyColumnsEnum")
+        where: _ @whereConditions(columnsEnum: "TaxonomyContentColumnsEnum")
+    ): [TaxonomyContent!]! @paginate(type: PAGINATOR, defaultCount: 10)
+    @softDeletes
+
+    taxonomyContent(
+        where: _ @whereConditions(columnsEnum: "TaxonomyContentColumnsEnum")
+    ): TaxonomyContent @first
+}
+
+type TaxonomyContent {
+    id: ID!
+    title: String!
+    description: String
+    parent: TaxonomyContent @belongsTo
+    children: [TaxonomyContent!]! @hasMany
+    lang: String
+    icon: String
+    published_at: DateTime
+    deleted_at: DateTime
+    created_at: DateTime
+    updated_at: DateTime
+    taxonomy: Taxonomy @belongsTo
+    ads: [Ad!]! @belongsToMany
+}
+input createTaxonomyContentInput {
+    title: String!
+    description: String
+    taxonomy: CreateTaxonomyBelongsTo!
+    parent: CreateTaxonomyContentParent
+    icon: String
+    lang: LanguagesEnum!
+}
+input updateTaxonomyContentInput {
+    title: String
+    description: String
+    taxonomy: CreateTaxonomyBelongsTo
+    parent: CreateTaxonomyContentParent
+    icon: String
+    lang: LanguagesEnum
+}
+input CreateTaxonomyBelongsTo {
+    connect: ID
+}
+input CreateTaxonomyContentParent {
+    connect: ID
+}
+enum TaxonomyContentColumnsEnum {
+    ID
+    PARENT_ID
+    TITLE
+    DESCRIPTION
+    LANG
+    ICON
+    PUBLISHED_AT
+    DELETED_AT
+    CREATED_AT
+    UPDATED_AT
+}
+enum LanguagesEnum {
+    EN
+    AR
+}

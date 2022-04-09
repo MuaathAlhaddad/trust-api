@@ -1,0 +1,43 @@
+extend type Query {
+    features(
+        orderBy: _ @orderBy(columnsEnum: "FeatureColumnsEnum")
+        where: _ @whereConditions(columnsEnum: "FeatureColumnsEnum")
+    ): [Feature!]! @paginate(type: PAGINATOR, defaultCount: 10)
+
+    feature(
+        where: _ @whereConditions(columnsEnum: "FeatureColumnsEnum")
+    ): Feature @first
+}
+
+type Feature {
+    id: ID!
+    sort: Int!
+    featureable_id: Int!
+    featureable_type: String!
+    type: FeatureTypesEnum!
+    feature_from: DateTime
+    feature_to: DateTime
+    created_at: DateTime
+    updated_at: DateTime
+    featureable: Featureable! @morphTo
+}
+
+enum FeatureTypesEnum {
+    homepage
+    top
+    highlight
+    campaign
+}
+
+union Featureable = Ad | User
+
+enum FeatureColumnsEnum {
+    ID
+    SORT
+    FEATUREABLE_ID
+    FEATUREABLE_TYPE
+    TYPE
+    PATH
+    CREATED_AT
+    UPDATED_AT
+}

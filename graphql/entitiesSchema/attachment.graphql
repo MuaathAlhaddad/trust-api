@@ -1,0 +1,71 @@
+extend type Mutation {
+    createAttachment(input: CreateAttachmentInputs!): Attachment! @create
+
+    deleteAttachment(attachable_id: Int!): Attachment @delete
+}
+extend type Query {
+    attachments(
+        orderBy: _ @orderBy(columnsEnum: "AttachmentColumnsEnum")
+    ): [Attachment!]! @paginate(type: PAGINATOR, defaultCount: 10)
+
+    attachment(id: ID @eq): Attachment @find
+}
+
+type Attachment {
+    id: ID!
+    attachable_id: Int!
+    attachable_type: String!
+    type: String!
+    path: String!
+    disk_name: String
+    file_name: String!
+    thumbnail: Boolean
+    deleted_at: DateTime
+    created_at: DateTime
+    updated_at: DateTime
+    attachable: Attachable! @morphTo
+}
+union Attachable = Ad | User
+
+input CreateAttachmentInputs {
+    path: String
+    disk_name: String
+    type: AttachmentTypesEnum!
+    file_name: String
+    thumbnail: Boolean
+    attachable: CreateAttachableMorphTo
+}
+input CreateAttachableMorphTo {
+    connect: ConnectAttachableInput
+    disconnect: Boolean
+    delete: Boolean
+}
+input ConnectAttachableInput {
+    type: AttachableTypesEnum!
+    id: ID!
+}
+enum AttachableTypesEnum {
+    ad
+    user
+}
+###################( Attachment )############################
+enum AttachmentColumnsEnum {
+    ID
+    ATTACHABLE_ID
+    ATTACHABLE_TYPE
+    TYPE
+    PATH
+    DISK_NAME
+    FILE_NAME
+    THUMBNAIL
+    DELETED_AT
+    CREATED_AT
+    UPDATED_AT
+}
+enum AttachmentTypesEnum {
+    PHOTO @enum(value: "photo")
+    DOCUMENT @enum(value: "document")
+    AUDIO @enum(value: "audio")
+    VIDEO @enum(value: "video")
+    OTHERS @enum(value: "others")
+}

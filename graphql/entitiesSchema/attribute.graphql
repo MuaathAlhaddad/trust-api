@@ -1,0 +1,78 @@
+extend type Query {
+    attributes(
+        orderBy: _ @orderBy(columnsEnum: "AttributeColumnsEnum")
+        where: _ @whereConditions(columnsEnum: "AttributeColumnsEnum")
+    ): [Attribute] @softDeletes @paginate(type: PAGINATOR, defaultCount: 10)
+
+    attribute(
+        where: _ @whereConditions(columnsEnum: "AttributeColumnsEnum")
+    ): Attribute @first
+}
+
+type Attribute {
+    id: ID!
+    color: String
+    negotiable: Boolean
+    warranty: Boolean
+    condition: AdConditionEnum
+    status: AdStatusEnum
+    boost: AdBoostEnum
+    gear: AdGearEnum
+    country_import: AdCountryImportEnum
+    fuel_type: AdFuelTypeEnum
+    kilometer: Int
+    engine_power: Int
+    verified_at: Date
+    deleted_at: DateTime
+    created_at: DateTime
+    updated_at: DateTime
+    ad: Ad @belongsTo
+}
+
+enum AdConditionEnum {
+    new
+    used
+}
+enum AdStatusEnum {
+    draft
+    pending
+    unpublished
+    published
+    sold
+}
+enum AdBoostEnum {
+    FOUR_WHEEL @enum(value: "four-wheel")
+    FRONT_WHEEL @enum(value: "front-wheel")
+    REAR_WHEEL @enum(value: "rear-wheel")
+}
+enum AdGearEnum {
+    auto
+    manual
+}
+enum AdCountryImportEnum {
+    gulf
+    usa
+    others
+}
+enum AdFuelTypeEnum {
+    petrol
+    diesel
+}
+enum AttributeColumnsEnum {
+    ID
+    COLOR
+    NEGOTIABLE
+    WARRANTY
+    CONDITION
+    STATUS
+    BOOST
+    GEAR
+    COUNTRY_IMPORT
+    FUEL_TYPE
+    KILOMETER
+    ENGINE_POWER
+    VERIFIED_AT
+    DELETED_AT
+    CREATED_AT
+    UPDATED_AT
+}

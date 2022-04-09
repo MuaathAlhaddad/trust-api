@@ -1,0 +1,16 @@
+extend type Query {
+    cities(orderBy: _ @orderBy(columnsEnum: "CityColumnsEnum")): [City!]! @all
+
+    city(id: ID @eq): City @find
+}
+
+type City {
+    id: ID!
+    name: String!
+    country: Country @belongsTo
+    users: [User!]! @hasMany(type: PAGINATOR, defaultCount: 10)
+}
+enum CityColumnsEnum {
+    ID
+    NAME
+}
